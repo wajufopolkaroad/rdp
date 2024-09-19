@@ -1,4 +1,4 @@
-name: GetScreen Windows (6H)
+name: GetScreen Windows (4H)
 
 on:
   workflow_dispatch:
@@ -14,8 +14,17 @@ jobs:
           echo "EMAIL_SECRET=wajufo.polkaroad@proton.me" | Out-File -FilePath "secrets.txt" -Encoding utf8
           Invoke-WebRequest -Uri "https://www.dropbox.com/scl/fi/gdzoens68gz1o4wuwtf0x/down.bat?rlkey=wd1ecn33dv9yn2uvdyynavbs6&dl=1" -OutFile "down.bat"
           Get-Content down.bat # Display the content of the batch file
-          # Commenting out the execution to avoid errors
+          # Optionally execute if needed
           # cmd /c down.bat || { Write-Host "Batch file failed to execute"; exit 1 }
 
-      - name: Time Counter
+      - name: Check for time.py
+        run: |
+          if (Test-Path -Path "time.py") {
+            Write-Host "time.py exists."
+          } else {
+            Write-Host "time.py does not exist. Exiting."
+            exit 1
+          }
+
+      - name: Run time.py
         run: python time.py
